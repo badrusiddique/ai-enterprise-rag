@@ -33,9 +33,9 @@ var embeddingGenerator = new OllamaEmbeddingGenerator(ollamaEndpoint, "nomic-emb
 
 var qdrantClient = new QdrantClient(qdrantEndpoint);
 var qdrantVectorStore = new QdrantVectorStore(qdrantClient, true, new QdrantVectorStoreOptions { EmbeddingGenerator = embeddingGenerator });
-var movieStore = qdrantVectorStore.GetCollection<ulong, Movie>("movies");
+var movieStore = qdrantVectorStore.GetCollection<ulong, Movie>("00-movies");
 
-var collectionExists = await qdrantClient.CollectionExistsAsync("movies");
+var collectionExists = await qdrantClient.CollectionExistsAsync("00-movies");
 if (!collectionExists)
 {
     Console.WriteLine("Creating collection and populating with movie data...");
