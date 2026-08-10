@@ -8,6 +8,7 @@ A monorepo of .NET console applications exploring Retrieval-Augmented Generation
 |---------|--------------|
 | [ai-rag-movie-app](./ai-rag-movie-app) | Base RAG pipeline using `Microsoft.Extensions.AI`. Embeds a curated movie dataset into Qdrant and answers questions grounded strictly in that data. |
 | [ai-semantic-rag-movie-app](./ai-semantic-rag-movie-app) | Extends the base with Semantic Kernel, adding function calling, tool dispatch via plugins, and full persistent chat history. |
+| [ai-text-splitting-py](./ai-text-splitting-py) | Python scripts covering the three main chunking strategies: length-based, recursive (with language-aware variants for Markdown and Python), and semantic splitting using local HuggingFace embeddings. |
 
 ## Shared infrastructure
 
