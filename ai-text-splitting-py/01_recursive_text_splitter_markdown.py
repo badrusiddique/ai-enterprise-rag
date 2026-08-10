@@ -1,3 +1,6 @@
+# Language.MARKDOWN tells the splitter to use Markdown-aware separators:
+# headings (##, #), fences (```), blank lines, then words.
+# Chunks will not cut through a heading or code fence.
 from langchain_text_splitters import Language, RecursiveCharacterTextSplitter
 
 
@@ -28,6 +31,7 @@ A simple Python-based project to manage and track student data, including their 
    git clone https://github.com/your-username/student-tracker.git
 """
 
+# from_language is a factory that sets the separator list for the chosen language
 markdown_splitter = RecursiveCharacterTextSplitter.from_language(
     language=Language.MARKDOWN,
     chunk_size=100,
@@ -36,5 +40,5 @@ markdown_splitter = RecursiveCharacterTextSplitter.from_language(
 
 raw_result = markdown_splitter.split_text(raw_text)
 print('Raw text split result:')
-print(len(raw_result))
+print(len(raw_result))  # each heading section becomes its own chunk
 print(raw_result)

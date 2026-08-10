@@ -1,3 +1,5 @@
+# Language.PYTHON uses Python-aware separators: class, def, blank lines, then characters.
+# Chunks will not cut through a class or function definition.
 from langchain_text_splitters import Language, RecursiveCharacterTextSplitter
 
 
@@ -9,7 +11,7 @@ class Student:
         self.grade = grade  # Grade is a float (like 8.5 or 9.2)
 
     def get_details(self):
-        return self.name"
+        return self.name
 
     def is_passing(self):
         return self.grade >= 6.0
@@ -25,6 +27,7 @@ else:
     print("The student is not passing.")
 """
 
+# from_language is a factory that sets the separator list for the chosen language
 python_splitter = RecursiveCharacterTextSplitter.from_language(
     language=Language.PYTHON,
     chunk_size=100,
@@ -33,5 +36,5 @@ python_splitter = RecursiveCharacterTextSplitter.from_language(
 
 raw_result = python_splitter.split_text(raw_text)
 print('Raw text split result:')
-print(len(raw_result))
+print(len(raw_result))  # class and function blocks become natural chunk boundaries
 print(raw_result)

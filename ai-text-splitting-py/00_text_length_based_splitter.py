@@ -1,3 +1,6 @@
+# CharacterTextSplitter splits text purely by character count.
+# separator='' means no boundary is respected — it cuts exactly at chunk_size characters.
+# Use this when the text is uniform and sentence/word boundaries do not matter.
 from langchain_text_splitters import CharacterTextSplitter
 from langchain_community.document_loaders import PyPDFLoader
 
@@ -24,16 +27,19 @@ Even after decades of thinking about this, I find that sentence startling.
 """
 
 text_splitter = CharacterTextSplitter(
-    chunk_size=100,
-    chunk_overlap=0,
-    separator=''
+    chunk_size=100,   # maximum characters per chunk
+    chunk_overlap=0,  # no overlap — each character appears in exactly one chunk
+    separator=''      # empty string: split at any character, no boundary respected
 )
 
+# split_text works on a raw string
 raw_result = text_splitter.split_text(raw_text)
 print('Raw text split result:')
 print(raw_result)
 
 
+# split_documents works on LangChain Document objects (e.g. loaded from a PDF)
+# Each Document carries the original text in .page_content plus metadata
 loader = PyPDFLoader("00_corpus_doc.pdf")
 doc_result = text_splitter.split_documents(loader.load())
 print('PDF document split result:')

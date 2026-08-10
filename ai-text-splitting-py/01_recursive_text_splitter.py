@@ -1,3 +1,7 @@
+# RecursiveCharacterTextSplitter tries a list of separators in order:
+# ["\n\n", "\n", " ", ""] — paragraph, line, word, then individual characters.
+# It works down the list until chunks fit within chunk_size.
+# This preserves sentence and paragraph boundaries where possible.
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 raw_text = """
@@ -7,11 +11,11 @@ These missions have not only expanded our knowledge of the universe but have als
 """
 
 recursive_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=100,
-    chunk_overlap=0,
+    chunk_size=100,  # maximum characters per chunk
+    chunk_overlap=0, # characters shared between adjacent chunks (0 = no overlap)
 )
 
 raw_result = recursive_splitter.split_text(raw_text)
 print('Raw text split result:')
-print(len(raw_result))
+print(len(raw_result))  # number of chunks produced
 print(raw_result)
