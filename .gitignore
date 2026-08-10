@@ -2,6 +2,14 @@
 bin/
 obj/
 
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
 # Rider / VS / VS Code IDE folders
 .idea/
 .vscode/
