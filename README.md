@@ -62,7 +62,7 @@ Dependabot checks NuGet, pip, and GitHub Actions dependencies weekly. Related up
 
 ## Automated pull request review
 
-Internal, non draft pull requests targeting `main` are reviewed by the open source `Qwen/Qwen2.5-Coder-32B-Instruct` model through Hugging Face Inference Providers. The workflow reads the pull request diff through the GitHub API, limits the submitted diff to 60 KB, and updates one advisory review comment. It does not check out or execute pull request code.
+Internal, non draft pull requests targeting `main` are reviewed by the open source `Qwen/Qwen2.5-Coder-32B-Instruct` model through Hugging Face Inference Providers. The workflow reads the pull request diff through the GitHub API, limits the submitted diff to 60 KB, and updates one consolidated advisory comment with the summary and final verdict. Findings with paths and line numbers validated against added diff lines are also posted as inline review comments. It does not check out or execute pull request code.
 
 Configure the reviewer:
 
