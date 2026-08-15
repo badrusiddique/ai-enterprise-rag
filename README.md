@@ -40,6 +40,10 @@ ollama pull nomic-embed-text
 
 Each project README lists its exact setup, run command, design choices, and current limits.
 
+## Learning guides
+
+[GitHub Actions and open model code review](Docs/github-actions-learning-guide.md) explains why the repository uses CI, Dependabot, and Hugging Face review, how the workflows operate, and how to reproduce the setup in another repository.
+
 ## Repository checks
 
 GitHub Actions builds each .NET project with its target SDK, verifies C# formatting, and compiles the Python scripts for syntax errors. CI does not start Ollama or Qdrant and does not download AI models.
@@ -62,11 +66,11 @@ Dependabot checks NuGet, pip, and GitHub Actions dependencies weekly. Related up
 
 ## Automated pull request review
 
-Internal, non draft pull requests targeting `main` are reviewed by the open source `Qwen/Qwen2.5-Coder-32B-Instruct` model through Hugging Face Inference Providers. The workflow reads the pull request diff through the GitHub API, limits the submitted diff to 60 KB, and updates one consolidated advisory comment with the summary and final verdict. Findings with paths and line numbers validated against added diff lines are also posted as inline review comments. It does not check out or execute pull request code.
+Internal, non draft pull requests targeting `main` are reviewed by the open source `Qwen/Qwen2.5-Coder-32B-Instruct` model through Hugging Face Inference Providers. The workflow reads the pull request diff through the GitHub API, limits the submitted diff to 60,000 bytes, and updates one consolidated advisory comment with the summary and final verdict. Findings with paths and line numbers validated against added diff lines are also posted as inline review comments. It does not check out or execute pull request code.
 
 Configure the reviewer:
 
-1. Create a fine grained Hugging Face token with Inference Providers permission.
+1. Create a fine-grained Hugging Face access token with Inference Providers permission.
 2. Add it as an Actions repository secret named `HF_TOKEN`.
 3. Optionally add an Actions repository variable named `HF_REVIEW_MODEL` to select another chat completion model.
 
@@ -76,7 +80,7 @@ The review workflow skips forked pull requests, draft pull requests, and Dependa
 
 Each completed review replaces prior `ai:code-review:*` labels with one advisory result:
 
-1. `ai:code-review:approved` means the model found no actionable findings in the complete diff.
+1. `ai:code-review:approved` means the model found no actionable findings in the complete supplied diff.
 2. `ai:code-review:changes-requested` means the model reported at least one actionable finding.
 3. `ai:code-review:inconclusive` means the diff was truncated or the model did not return a reliable verdict.
 
