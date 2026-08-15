@@ -1,0 +1,35 @@
+version: 2
+
+updates:
+  - package-ecosystem: nuget
+    directories:
+      - /ai-rag-movie-app
+      - /ai-semantic-rag-movie-app
+      - /ai-pdf-rag-app
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 3
+    groups:
+      dotnet-dependencies:
+        patterns:
+          - "*"
+
+  - package-ecosystem: pip
+    directory: /ai-text-splitting-py
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 1
+    groups:
+      python-dependencies:
+        patterns:
+          - "*"
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 2
+    groups:
+      github-actions:
+        patterns:
+          - "*"

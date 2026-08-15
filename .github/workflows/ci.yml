@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dotnet:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Movie RAG on .NET 10
+            project: ai-rag-movie-app/ai-rag-movie-app.csproj
+            sdk: 10.0.x
+          - name: Semantic RAG on .NET 9
+            project: ai-semantic-rag-movie-app/ai-semantic-rag-movie-app.csproj
+            sdk: 9.0.x
+          - name: PDF RAG on .NET 9
+            project: ai-pdf-rag-app/ai-pdf-rag-app.csproj
+            sdk: 9.0.x
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ matrix.sdk }}
+
+      - name: Restore
+        run: dotnet restore "${{ matrix.project }}"
+
+      - name: Build
+        run: dotnet build "${{ matrix.project }}" --configuration Release --no-restore
+
+      - name: Verify formatting
+        run: dotnet format "${{ matrix.project }}" --verify-no-changes --no-restore
+
+  python:
+    name: Python syntax
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile scripts
+        run: python -m compileall -q ai-text-splitting-py

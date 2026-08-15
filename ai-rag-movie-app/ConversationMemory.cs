@@ -17,7 +17,7 @@ public class ConversationMemory
         if (_conversationMemory.Count > _maxCapacity)
             _conversationMemory.RemoveAt(0);
     }
-    
+
     public IEnumerable<string> GetConversationHistory()
     {
         return _conversationMemory.AsReadOnly();
