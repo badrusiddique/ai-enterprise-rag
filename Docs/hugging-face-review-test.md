@@ -10,3 +10,5 @@ Expected checks:
 4. A later push updates the existing review comment instead of creating a duplicate.
 
 This pull request should be closed after the automation is verified.
+
+The second push verifies that the existing review comment is updated in place.
