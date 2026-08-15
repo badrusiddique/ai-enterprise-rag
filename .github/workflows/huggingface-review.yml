@@ -53,8 +53,10 @@ jobs:
           model_output="$RUNNER_TEMP/model-output.txt"
           review_json="$RUNNER_TEMP/review.json"
           valid_lines="$RUNNER_TEMP/valid-lines.tsv"
+          prompt_lines="$RUNNER_TEMP/prompt-lines.tsv"
           valid_lines_json="$RUNNER_TEMP/valid-lines.json"
           inline_comments="$RUNNER_TEMP/inline-comments.json"
+          previous_inline_ids="$RUNNER_TEMP/previous-inline-ids.txt"
           review_payload="$RUNNER_TEMP/review-payload.json"
           comment_file="$RUNNER_TEMP/comment.md"
           comment_payload="$RUNNER_TEMP/comment.json"
@@ -97,6 +99,8 @@ jobs:
             }
           ' "$bounded_diff" > "$valid_lines"
 
+          head -n 500 "$valid_lines" > "$prompt_lines"
+
           jq -Rn \
             '[inputs | split("\t") | select(length == 2) | {path: .[0], line: (.[1] | tonumber)}]' \
             < "$valid_lines" > "$valid_lines_json"
@@ -105,7 +109,7 @@ jobs:
             --arg model "$HF_MODEL" \
             --arg truncation_note "$truncation_note" \
             --rawfile diff "$bounded_diff" \
-            --rawfile commentable_lines "$valid_lines" \
+            --rawfile commentable_lines "$prompt_lines" \
             '{
               model: $model,
               temperature: 0.2,
@@ -135,7 +139,7 @@ jobs:
           jq -er '.choices[0].message.content | select(length > 0)' \
             "$response_file" > "$model_output"
 
-          if ! sed -e '/^```json$/d' -e '/^```$/d' "$model_output" \
+          if ! sed -E '/^```([jJ][sS][oO][nN])?[[:space:]]*$/d' "$model_output" \
             | jq -e '
                 if (
                   type == "object" and
@@ -152,10 +156,9 @@ jobs:
                 ) then . else error("invalid structured review") end
               ' > "$review_json"; then
             jq -n \
-              --rawfile output "$model_output" \
               '{
                 verdict: "inconclusive",
-                summary: ("The model response could not be parsed as a structured review.\n\n" + $output),
+                summary: "The model response could not be parsed as a structured review.",
                 findings: []
               }' > "$review_json"
           fi
@@ -178,18 +181,12 @@ jobs:
           case "$verdict" in
             "approved")
               review_label="ai:code-review:approved"
-              label_color="2da44e"
-              label_description="AI review found no actionable findings; advisory only"
               ;;
             "changes_requested")
               review_label="ai:code-review:changes-requested"
-              label_color="cf222e"
-              label_description="AI review found actionable findings"
               ;;
             *)
               review_label="ai:code-review:inconclusive"
-              label_color="bf8700"
-              label_description="AI review could not reach a reliable conclusion"
               ;;
           esac
 
@@ -220,13 +217,7 @@ jobs:
             "/repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/comments" \
             --paginate \
             --jq '.[] | select(.user.login == "github-actions[bot]" and (.body | contains("<!-- hugging-face-inline-review -->"))) | .id' \
-            | while read -r inline_comment_id; do
-                if [[ -n "$inline_comment_id" ]]; then
-                  gh api \
-                    --method DELETE \
-                    "/repos/$GITHUB_REPOSITORY/pulls/comments/$inline_comment_id" > /dev/null
-                fi
-              done
+            > "$previous_inline_ids"
 
           if (( $(jq 'length' "$inline_comments") > 0 )); then
             head_sha=$(gh api "/repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER" --jq '.head.sha')
@@ -241,6 +232,14 @@ jobs:
               "/repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/reviews" \
               --input "$review_payload" > /dev/null
           fi
+
+          while read -r inline_comment_id; do
+            if [[ -n "$inline_comment_id" ]]; then
+              gh api \
+                --method DELETE \
+                "/repos/$GITHUB_REPOSITORY/pulls/comments/$inline_comment_id" > /dev/null
+            fi
+          done < "$previous_inline_ids"
 
           comment_id=$(gh api \
             "/repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
@@ -260,19 +259,6 @@ jobs:
               --method POST \
               "/repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
               --input "$comment_payload" > /dev/null
-          fi
-
-          encoded_label=$(jq -rn --arg value "$review_label" '$value | @uri')
-          if ! gh api "/repos/$GITHUB_REPOSITORY/labels/$encoded_label" > /dev/null 2>&1; then
-            jq -n \
-              --arg name "$review_label" \
-              --arg color "$label_color" \
-              --arg description "$label_description" \
-              '{name: $name, color: $color, description: $description}' \
-              | gh api \
-                  --method POST \
-                  "/repos/$GITHUB_REPOSITORY/labels" \
-                  --input - > /dev/null
           fi
 
           current_labels=$(gh api "/repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/labels")
