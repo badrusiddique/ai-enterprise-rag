@@ -73,6 +73,9 @@ public sealed class RegulationQueryService(
             chatHistory.RemoveAt(1); // Remove the oldest non-system message.
         }
 
+        Console.WriteLine("---------------------------------------------");
+        Console.WriteLine($"Conversation history count: {chatHistory.Count}");
+
         return (answer, references);
     }
 }
