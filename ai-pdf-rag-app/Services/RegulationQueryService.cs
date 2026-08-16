@@ -20,11 +20,14 @@ public sealed class RegulationQueryService(
         'I don't have that in the regulation text provided.'
         """;
 
+    private const int MaxChatHistoryMessages = 5;
+    private string lastRetrievedContent = string.Empty;
     private readonly ChatHistory chatHistory = new(SystemPrompt);
 
     public async Task<(string Answer, IReadOnlyList<string> References)> AskAsync(string question)
     {
-        var queryEmbedding = await embeddingGenerator.GenerateVectorAsync(question);
+        var searchQuestion = $"{lastRetrievedContent} {question}".Trim();
+        var queryEmbedding = await embeddingGenerator.GenerateVectorAsync(searchQuestion);
         var collection = vectorStore.GetCollection<Guid, OhsRegulation>(options.CollectionName);
         var searchResults = collection.SearchEmbeddingAsync(
             queryEmbedding,
@@ -36,6 +39,7 @@ public sealed class RegulationQueryService(
 
         var context = new List<string>();
         var references = new List<string>();
+        var isFirstResult = true;
 
         await foreach (var result in searchResults)
         {
@@ -43,6 +47,12 @@ public sealed class RegulationQueryService(
             context.Add($"Page: {result.Record.PageNumber} Content: {result.Record.Content}");
             references.Add(
                 $"Score: {score:P2} Page: {result.Record.PageNumber} Content: {result.Record.Content}");
+
+            if (isFirstResult)
+            {
+                lastRetrievedContent = result.Record.Content.Split('.').First().Trim();
+                isFirstResult = false;
+            }
         }
 
         var userPrompt = $"""
@@ -56,6 +66,12 @@ public sealed class RegulationQueryService(
         var response = await chatCompletionService.GetChatMessageContentAsync(chatHistory);
         var answer = response.Content ?? string.Empty;
         chatHistory.AddAssistantMessage(answer);
+
+        // Keep the system prompt and the latest five conversation messages.
+        while (chatHistory.Count > MaxChatHistoryMessages)
+        {
+            chatHistory.RemoveAt(1); // Remove the oldest non-system message.
+        }
 
         return (answer, references);
     }

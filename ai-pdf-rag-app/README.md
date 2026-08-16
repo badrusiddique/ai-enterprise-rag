@@ -103,7 +103,7 @@ The local Qdrant dashboard is available at `http://localhost:6333/dashboard`.
 1. The Semantic Kernel Ollama and Qdrant packages are alpha and preview packages. Their APIs can change between versions.
 2. PdfPig exposes page text, but reading order can be imperfect in PDFs with complex columns or positioned text.
 3. Ingestion writes one vector at a time. This keeps the learning flow readable, but batching would be faster for a large corpus.
-4. Conversation history lasts only for the current process.
+4. Conversation history lasts only for the current process. The chat history keeps a maximum of five messages, including the system prompt. After each response, that leaves the latest four conversation messages, or two complete exchanges.
 5. This is a learning project and not a source of legal advice.
 
 ## Documentation basis

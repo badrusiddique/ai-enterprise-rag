@@ -22,6 +22,8 @@ Each chunk becomes one `OhsRegulation` record with a generated `Guid`, its sourc
 
 Embeddings use `nomic-embed-text` with 768 dimensions. Qdrant uses cosine similarity and an HNSW index. A query retrieves the three closest records. Their text and page numbers become the context sent to the chat model.
 
+The query service keeps a sliding window of five total chat messages, including the system prompt. After each answer, it removes the oldest non-system messages until the limit is met. Since each turn adds one user message and one assistant message, the stable window retains the latest two complete exchanges. While the next response is being built, the current user message is added before the model call and the assistant response is trimmed into the next window afterward.
+
 The application creates the collection only when it does not exist. If ingestion fails before every chunk is stored, the application removes the incomplete collection. A schema, source, model, or chunking change still requires an explicit collection rebuild. This behavior is kept visible instead of adding migration and versioning machinery during the first week.
 
 `Program.cs` stays focused on dependency registration and the console flow. PDF ingestion and regulation querying are separate concrete services because they are the two substantial operations in the application. The vector record, shared options, and PDF utility remain separate because they represent concrete data, configuration, and document access. Repository layers, service interfaces, and extra result types are deferred until the application has more than one caller or implementation.
@@ -43,6 +45,7 @@ Cosine similarity matches the current text embedding use case. HNSW is the conne
 5. A different embedding dimension requires a model change and a collection rebuild.
 6. A changed PDF or chunking strategy is not detected automatically.
 7. PdfPig reading order can affect chunk quality before token splitting begins.
+8. Older conversation turns leave the chat history after the sliding window advances.
 
 ## Alternatives considered
 
@@ -64,4 +67,4 @@ A fingerprint of the PDF, model, and chunk settings could create a new collectio
 
 ## Review point
 
-Revisit this decision after retrieval evaluation shows where answers fail. Useful evidence includes missed clauses, weak similarity scores, citations that span the wrong page, and repeated context caused by overlap. Changes should be driven by those results rather than by a larger abstraction alone.
+Revisit this decision after retrieval evaluation shows where answers fail. Useful evidence includes missed clauses, weak similarity scores, citations that span the wrong page, repeated context caused by overlap, and follow up questions that need more than two prior exchanges. Changes should be driven by those results rather than by a larger abstraction alone.
