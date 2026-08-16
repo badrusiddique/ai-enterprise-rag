@@ -75,6 +75,8 @@ On first run the app creates the `00-movies` collection in Qdrant and generates 
 
 Type `exit` to quit.
 
+To debug this project in VS Code, choose `C#: AI RAG movie app` from the Run and Debug menu. The profile builds the Debug target before starting the app.
+
 ## Dataset
 
 20 curated films grouped by director:

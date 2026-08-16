@@ -108,6 +108,10 @@ python 02_semantic_text_spliiter.py
 
 The semantic splitter downloads the `BAAI/bge-large-en-v1.5` model on first run (~1.3 GB). Subsequent runs use the cached model.
 
+## Debugging in VS Code
+
+The repository includes a launch profile for each script. Choose a `Python:` profile from the Run and Debug menu after selecting the interpreter from this project's `.venv` environment.
+
 ## Dataset
 
 `00_corpus_doc.pdf` is a sample document used by the length-based splitter to demonstrate splitting loaded PDF pages.

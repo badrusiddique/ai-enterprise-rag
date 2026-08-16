@@ -13,6 +13,10 @@ __pycache__/
 # Rider / VS / VS Code IDE folders
 .idea/
 .vscode/
+!.vscode/
+.vscode/*
+!.vscode/launch.json
+!.vscode/tasks.json
 *.user
 *.suo
 *.userosscache

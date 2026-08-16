@@ -40,6 +40,10 @@ ollama pull nomic-embed-text
 
 Each project README lists its exact setup, run command, design choices, and current limits.
 
+## Debug locally
+
+The repository includes shared VS Code launch profiles in `.vscode/launch.json`. Choose a `C#` profile to build and debug one of the .NET applications, or choose a `Python` profile to run one text splitting script with breakpoints. Select the Python interpreter from `ai-text-splitting-py/.venv` after installing its requirements.
+
 ## Learning guides
 
 [GitHub Actions and open model code review](Docs/github-actions-learning-guide.md) explains why the repository uses CI, Dependabot, and Hugging Face review, how the workflows operate, and how to reproduce the setup in another repository.

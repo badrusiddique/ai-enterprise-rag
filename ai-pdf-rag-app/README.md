@@ -86,6 +86,8 @@ When is fall protection required?
 
 Type `exit` to end the session.
 
+To debug this project in VS Code, choose `C#: PDF RAG app` from the Run and Debug menu. The profile builds the Debug target first and then starts the executable. Qdrant and Ollama must be running for ingestion and questions to work.
+
 ## Configuration
 
 The local endpoints, model names, collection name, chunk sizes, and result count are in `Configuration/RagOptions.cs`. The options object is registered once and injected into the two services.

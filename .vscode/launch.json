@@ -1,0 +1,77 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "C#: AI RAG movie app",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder}/ai-rag-movie-app/bin/Debug/net10.0/ai-rag-movie-app",
+            "cwd": "${workspaceFolder}/ai-rag-movie-app",
+            "preLaunchTask": "build ai-rag-movie-app",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "C#: Semantic RAG movie app",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder}/ai-semantic-rag-movie-app/bin/Debug/net9.0/ai-semantic-rag-movie-app",
+            "cwd": "${workspaceFolder}/ai-semantic-rag-movie-app",
+            "preLaunchTask": "build ai-semantic-rag-movie-app",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "C#: PDF RAG app",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder}/ai-pdf-rag-app/bin/Debug/net9.0/ai-pdf-rag-app",
+            "cwd": "${workspaceFolder}/ai-pdf-rag-app",
+            "preLaunchTask": "build ai-pdf-rag-app",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: length based splitter",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/ai-text-splitting-py/00_text_length_based_splitter.py",
+            "cwd": "${workspaceFolder}/ai-text-splitting-py",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Python: recursive splitter",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/ai-text-splitting-py/01_recursive_text_splitter.py",
+            "cwd": "${workspaceFolder}/ai-text-splitting-py",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Python: recursive Markdown splitter",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/ai-text-splitting-py/01_recursive_text_splitter_markdown.py",
+            "cwd": "${workspaceFolder}/ai-text-splitting-py",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Python: recursive Python splitter",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/ai-text-splitting-py/01_recursive_text_splitter_python.py",
+            "cwd": "${workspaceFolder}/ai-text-splitting-py",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Python: semantic splitter",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/ai-text-splitting-py/02_semantic_text_spliiter.py",
+            "cwd": "${workspaceFolder}/ai-text-splitting-py",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        }
+    ]
+}

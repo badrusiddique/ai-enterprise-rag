@@ -89,6 +89,8 @@ On first run the app creates the `01-movies` collection in Qdrant and generates 
 
 Type `exit` to quit.
 
+To debug this project in VS Code, choose `C#: Semantic RAG movie app` from the Run and Debug menu. The profile builds the Debug target before starting the app.
+
 ## Dataset
 
 Same 20 films as the base app, grouped by director. Descriptions in this version include director, year, and lead cast for richer context when the LLM reasons over records.
