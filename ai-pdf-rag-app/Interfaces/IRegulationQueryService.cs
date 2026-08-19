@@ -1,4 +1,4 @@
-namespace AiPdfRagApp.Services;
+namespace AiPdfRagApp.Interfaces;
 
 public interface IRegulationQueryService
 {

@@ -1,4 +1,5 @@
 using AiPdfRagApp.Configuration;
+using AiPdfRagApp.Interfaces;
 using AiPdfRagApp.Models;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.VectorData;

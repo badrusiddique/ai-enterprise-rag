@@ -1,5 +1,5 @@
 using AiPdfRagApi.DTOs;
-using AiPdfRagApp.Services;
+using AiPdfRagApp.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AiPdfRagApi.Controllers;

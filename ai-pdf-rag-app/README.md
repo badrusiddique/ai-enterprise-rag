@@ -23,10 +23,11 @@ ai-pdf-rag-app
   Configuration
     RagOptions.cs
     RagServiceExtensions.cs
+  Interfaces
+    IRegulationQueryService.cs
   Models
     OhsRegulation.cs
   Services
-    IRegulationQueryService.cs
     PdfIngestionService.cs
     RegulationQueryService.cs
   Corpus
@@ -48,7 +49,7 @@ ai-pdf-rag-app
 
 `Utilities/PdfTextExtractor.cs` contains the small PdfPig boundary. Its name describes the one operation it performs, and keeping extraction separate makes `Program.cs` easier to scan without introducing another application layer.
 
-The ingestion service is registered directly. The query service also implements `IRegulationQueryService` because the API project consumes that boundary and its controller tests should not start Ollama or Qdrant. Repositories and extra result classes are omitted until the application has a real need for them.
+The ingestion service is registered directly. The query service also implements `Interfaces/IRegulationQueryService.cs` because the API project consumes that boundary and its controller tests should not start Ollama or Qdrant. Repositories and extra result classes are omitted until the application has a real need for them.
 
 ## Prerequisites
 

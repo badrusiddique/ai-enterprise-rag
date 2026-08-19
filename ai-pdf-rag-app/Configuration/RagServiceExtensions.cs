@@ -1,3 +1,4 @@
+using AiPdfRagApp.Interfaces;
 using AiPdfRagApp.Services;
 using AiPdfRagApp.Utilities;
 using Microsoft.Extensions.DependencyInjection;
