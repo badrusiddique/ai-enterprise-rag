@@ -8,6 +8,8 @@ namespace AiPdfRagApi.Controllers;
 [Route("api/[controller]")]
 public class HealthController(HttpClient httpClient, RagOptions options) : ControllerBase
 {
+    #region Public methods
+
     [HttpGet("dependencies")]
     public async Task<ActionResult<DependencyHealthResponseDto>> GetDependencies(CancellationToken cancellationToken = default)
     {
@@ -16,6 +18,10 @@ public class HealthController(HttpClient httpClient, RagOptions options) : Contr
 
         return Ok(new DependencyHealthResponseDto(qdrant, ollama));
     }
+
+    #endregion
+
+    #region Private methods
 
     private async Task<DependencyHealthDto> CheckAsync(string name, Uri url, CancellationToken cancellationToken)
     {
@@ -34,4 +40,6 @@ public class HealthController(HttpClient httpClient, RagOptions options) : Contr
             return new DependencyHealthDto(name, url, false, null);
         }
     }
+
+    #endregion
 }

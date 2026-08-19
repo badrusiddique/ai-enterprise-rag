@@ -15,6 +15,8 @@ public class RegulationController : ControllerBase
         _regulationQueryService = regulationQueryService;
     }
 
+    #region Public methods
+
     [HttpPost("query")]
     public async Task<ActionResult<RegulationResponseDto>> QueryRegulation([FromBody] RegulationRequestDto requestDto)
     {
@@ -27,4 +29,6 @@ public class RegulationController : ControllerBase
 
         return Ok(new RegulationResponseDto(answer, references));
     }
+
+    #endregion
 }
