@@ -36,6 +36,18 @@
                 "Debug"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build ai-pdf-rag-api",
+            "type": "shell",
+            "command": "dotnet",
+            "args": [
+                "build",
+                "${workspaceFolder}/ai-pdf-rag-api/ai-pdf-rag-api.csproj",
+                "--configuration",
+                "Debug"
+            ],
+            "problemMatcher": "$msCompile"
         }
     ]
 }

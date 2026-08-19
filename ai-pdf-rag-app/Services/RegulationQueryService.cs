@@ -10,7 +10,7 @@ public sealed class RegulationQueryService(
     IVectorStore vectorStore,
     IEmbeddingGenerator<string, Embedding<float>> embeddingGenerator,
     IChatCompletionService chatCompletionService,
-    RagOptions options)
+    RagOptions options) : IRegulationQueryService
 {
     private const string SystemPrompt = """
         You are a BC Occupational Health and Safety regulation assistant.

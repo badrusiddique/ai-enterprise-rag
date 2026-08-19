@@ -1,24 +1,10 @@
 using AiPdfRagApp.Configuration;
 using AiPdfRagApp.Services;
-using AiPdfRagApp.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
-using Qdrant.Client;
 
-var options = new RagOptions();
 var builder = Kernel.CreateBuilder();
-
-builder.Services.AddSingleton(options);
-builder.Services.AddSingleton<IPdfTextExtractor, PdfTextExtractor>();
-builder.Services.AddSingleton<PdfIngestionService>();
-builder.Services.AddSingleton<RegulationQueryService>();
-builder.Services.AddSingleton(_ => new QdrantClient(options.QdrantEndpoint));
-builder.Services.AddQdrantVectorStore();
-
-#pragma warning disable SKEXP0070
-builder.AddOllamaEmbeddingGenerator(options.EmbeddingModel, options.OllamaEndpoint);
-builder.AddOllamaChatCompletion(options.ChatModel, options.OllamaEndpoint);
-#pragma warning restore SKEXP0070
+builder.Services.AddRagServices();
 
 var kernel = builder.Build();
 var ingestionService = kernel.Services.GetRequiredService<PdfIngestionService>();

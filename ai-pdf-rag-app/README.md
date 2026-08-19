@@ -22,9 +22,11 @@ The Qdrant collection is created on the first run. Later runs reuse it, so the P
 ai-pdf-rag-app
   Configuration
     RagOptions.cs
+    RagServiceExtensions.cs
   Models
     OhsRegulation.cs
   Services
+    IRegulationQueryService.cs
     PdfIngestionService.cs
     RegulationQueryService.cs
   Corpus
@@ -38,7 +40,7 @@ ai-pdf-rag-app
   Program.cs
 ```
 
-`Program.cs` is the composition root and console entry point. It registers dependencies, ensures the PDF is indexed, and passes each question to the query service. A new reader can understand the runtime flow without reading implementation details first.
+`Program.cs` is the console entry point. It uses `Configuration/RagServiceExtensions.cs` to register dependencies, ensures the PDF is indexed, and passes each question to the query service. The API project uses the same extension method so the RAG service setup stays in one place.
 
 `Services/PdfIngestionService.cs` owns the path from PDF pages to chunks, embeddings, and Qdrant records. `Services/RegulationQueryService.cs` owns retrieval, prompt construction, and conversation history. These are the two substantial operations in the application.
 
@@ -46,7 +48,7 @@ ai-pdf-rag-app
 
 `Utilities/PdfTextExtractor.cs` contains the small PdfPig boundary. Its name describes the one operation it performs, and keeping extraction separate makes `Program.cs` easier to scan without introducing another application layer.
 
-The two services are registered directly. They do not have interfaces because there is only one implementation and one caller. Repositories and extra result classes are also omitted until the application has a real need for them.
+The ingestion service is registered directly. The query service also implements `IRegulationQueryService` because the API project consumes that boundary and its controller tests should not start Ollama or Qdrant. Repositories and extra result classes are omitted until the application has a real need for them.
 
 ## Prerequisites
 

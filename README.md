@@ -20,6 +20,10 @@ Python examples for length based, recursive, language aware, and semantic text s
 
 A local question answering application for selected parts of the British Columbia Occupational Health and Safety Regulation. It extracts text with PdfPig, creates overlapping chunks, embeds them with Ollama, stores them in Qdrant, and returns answers with page references.
 
+### [AI PDF RAG API](./ai-pdf-rag-api)
+
+An ASP.NET Core API for the PDF regulation RAG pipeline. It references `ai-pdf-rag-app`, uses the same `AddRagServices()` dependency registration, and exposes the query flow through `POST /api/regulation/query`.
+
 ## Shared infrastructure
 
 The .NET applications use the same local Ollama and Qdrant services. Each application uses a separate collection name so their records do not conflict.
@@ -60,10 +64,14 @@ Run the same checks locally:
 dotnet build ai-rag-movie-app/ai-rag-movie-app.csproj --configuration Release
 dotnet build ai-semantic-rag-movie-app/ai-semantic-rag-movie-app.csproj --configuration Release
 dotnet build ai-pdf-rag-app/ai-pdf-rag-app.csproj --configuration Release
+dotnet build ai-pdf-rag-api/ai-pdf-rag-api.csproj --configuration Release
+dotnet test ai-pdf-rag-api.Tests/ai-pdf-rag-api.Tests.csproj --configuration Release
 
 dotnet format ai-rag-movie-app/ai-rag-movie-app.csproj --verify-no-changes
 dotnet format ai-semantic-rag-movie-app/ai-semantic-rag-movie-app.csproj --verify-no-changes
 dotnet format ai-pdf-rag-app/ai-pdf-rag-app.csproj --verify-no-changes
+dotnet format ai-pdf-rag-api/ai-pdf-rag-api.csproj --verify-no-changes
+dotnet format ai-pdf-rag-api.Tests/ai-pdf-rag-api.Tests.csproj --verify-no-changes
 
 python3 -m compileall -q ai-text-splitting-py
 ```

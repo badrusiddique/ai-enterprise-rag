@@ -1,0 +1,11 @@
+@ai_pdf_rag_api_HostAddress = http://localhost:5053
+
+POST {{ai_pdf_rag_api_HostAddress}}/api/regulation/query
+Content-Type: application/json
+Accept: application/json
+
+{
+	"query": "When is fall protection required?"
+}
+
+###
