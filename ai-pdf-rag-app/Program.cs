@@ -1,4 +1,5 @@
 using AiPdfRagApp.Configuration;
+using AiPdfRagApp.Interfaces;
 using AiPdfRagApp.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
@@ -8,7 +9,7 @@ builder.Services.AddRagServices();
 
 var kernel = builder.Build();
 var ingestionService = kernel.Services.GetRequiredService<PdfIngestionService>();
-var queryService = kernel.Services.GetRequiredService<RegulationQueryService>();
+var queryService = kernel.Services.GetRequiredService<IRegulationQueryService>();
 
 Console.WriteLine("AI PDF RAG App is starting...");
 

@@ -16,8 +16,7 @@ public static class RagServiceExtensions
         services.AddSingleton(options);
         services.AddSingleton<IPdfTextExtractor, PdfTextExtractor>();
         services.AddSingleton<PdfIngestionService>();
-        services.AddSingleton<RegulationQueryService>();
-        services.AddSingleton<IRegulationQueryService>(provider => provider.GetRequiredService<RegulationQueryService>());
+        services.AddSingleton<IRegulationQueryService, RegulationQueryService>();
         services.AddSingleton(_ => new QdrantClient(options.QdrantEndpoint));
         services.AddQdrantVectorStore();
 
