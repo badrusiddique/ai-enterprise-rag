@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddHealthChecks();
+builder.Services.AddHttpClient();
 
 // Add RAG services from shared library
 builder.Services.AddRagServices();

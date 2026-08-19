@@ -2,6 +2,7 @@ namespace AiPdfRagApp.Configuration;
 
 public sealed class RagOptions
 {
+    public Uri QdrantHttpEndpoint { get; } = new("http://localhost:6333");
     public Uri QdrantEndpoint { get; } = new("http://localhost:6334");
     public Uri OllamaEndpoint { get; } = new("http://localhost:11434");
     public string CollectionName { get; } = "00-ohs-regulations";

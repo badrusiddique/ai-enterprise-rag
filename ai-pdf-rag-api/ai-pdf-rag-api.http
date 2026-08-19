@@ -9,3 +9,10 @@ Accept: application/json
 }
 
 ###
+
+GET {{ai_pdf_rag_api_HostAddress}}/api/health/dependencies
+Accept: application/json
+
+###
+
+GET {{ai_pdf_rag_api_HostAddress}}/api/dummy
