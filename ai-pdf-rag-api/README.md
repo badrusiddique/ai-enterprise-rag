@@ -8,7 +8,7 @@ This ASP.NET Core API exposes the PDF regulation RAG query flow over HTTP. It re
 2. Validates that the request contains a non-empty query.
 3. Calls `IRegulationQueryService.AskAsync` from `ai-pdf-rag-app`.
 4. Returns the generated answer and retrieved references as JSON.
-5. Checks local Qdrant and Ollama availability at `GET /api/health/dependencies`.
+5. Checks local Qdrant and Ollama availability at `GET /api/health`.
 
 ## Request
 
@@ -35,7 +35,7 @@ Content-Type: application/json
 ## Dependency health
 
 ```http
-GET http://localhost:5053/api/health/dependencies
+GET http://localhost:5053/api/health
 Accept: application/json
 ```
 
@@ -50,14 +50,18 @@ ai-pdf-rag-api
     HealthController.cs
     RegulationController.cs
   DTOs
-    DependencyHealth.cs
+    Health.cs
     Regulation.cs
+  Models
+    DependencyHealth.cs
   Properties
     launchSettings.json
   Program.cs
 ```
 
-`Program.cs` registers normal API services and calls `AddRagServices()` from `ai-pdf-rag-app`. `RegulationController.cs` stays thin: it validates the request and delegates the RAG work to the shared query service. `HealthController.cs` only checks whether Qdrant and Ollama respond at their configured URLs.
+`Program.cs` registers normal API services and calls `AddRagServices()` from `ai-pdf-rag-app`. `RegulationController.cs` stays thin: it validates the request and delegates the RAG work to the shared query service. `HealthController.cs` checks whether Qdrant and Ollama respond at their configured URLs, keeps that check result as a model, and maps it to `HealthResponseDto` at the API boundary.
+
+Controllers use explicit OpenAPI tags like `Controllers/Health` so Scalar groups endpoints by controller-oriented labels instead of relying on generated controller names.
 
 ## Prerequisites
 

@@ -22,7 +22,7 @@ A local question answering application for selected parts of the British Columbi
 
 ### [AI PDF RAG API](./ai-pdf-rag-api)
 
-An ASP.NET Core API for the PDF regulation RAG pipeline. It references `ai-pdf-rag-app`, uses the same `AddRagServices()` dependency registration, exposes the query flow through `POST /api/regulation/query`, and checks local Qdrant/Ollama availability through `GET /api/health/dependencies`.
+An ASP.NET Core API for the PDF regulation RAG pipeline. It references `ai-pdf-rag-app`, uses the same `AddRagServices()` dependency registration, exposes the query flow through `POST /api/regulation/query`, and checks local Qdrant/Ollama availability through `GET /api/health`.
 
 ## Shared infrastructure
 

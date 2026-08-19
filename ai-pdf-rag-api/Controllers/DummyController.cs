@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace AiPdfRagApi.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/dummy")]
+[Tags("Controllers/Dummy")]
 public class DummyController : ControllerBase
 {
     #region Public methods

@@ -1,6 +1,7 @@
 using AiPdfRagApi.Controllers;
 using AiPdfRagApi.DTOs;
 using AiPdfRagApp.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
 
@@ -8,6 +9,17 @@ namespace AiPdfRagApi.Tests;
 
 public sealed class RegulationControllerTests
 {
+    [Fact]
+    public void Tags_GroupRegulationUnderControllers()
+    {
+        var tags = typeof(RegulationController)
+            .GetCustomAttributes(typeof(TagsAttribute), inherit: false)
+            .Cast<TagsAttribute>()
+            .Single();
+
+        Assert.Equal(["Controllers/Regulation"], tags.Tags);
+    }
+
     [Fact]
     public async Task QueryRegulation_WhenQueryIsBlank_ReturnsBadRequest()
     {

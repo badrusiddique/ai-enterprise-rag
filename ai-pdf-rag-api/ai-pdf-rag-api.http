@@ -10,7 +10,7 @@ Accept: application/json
 
 ###
 
-GET {{ai_pdf_rag_api_HostAddress}}/api/health/dependencies
+GET {{ai_pdf_rag_api_HostAddress}}/api/health
 Accept: application/json
 
 ###
