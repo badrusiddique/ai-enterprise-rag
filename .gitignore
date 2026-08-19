@@ -27,6 +27,9 @@ __pycache__/
 *.snupkg
 packages/
 
+# Local settings and secrets
+appsettings.Local.json
+
 # OS
 .DS_Store
 Thumbs.db

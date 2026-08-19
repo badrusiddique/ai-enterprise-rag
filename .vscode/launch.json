@@ -26,7 +26,11 @@
             "program": "${workspaceFolder}/ai-pdf-rag-app/bin/Debug/net9.0/ai-pdf-rag-app",
             "cwd": "${workspaceFolder}/ai-pdf-rag-app",
             "preLaunchTask": "build ai-pdf-rag-app",
-            "console": "integratedTerminal"
+            "console": "integratedTerminal",
+            "env": {
+                "DOTNET_ENVIRONMENT": "Development",
+                "APP_SETTINGS_PROFILE": "Local"
+            }
         },
         {
             "name": "C#: PDF RAG API",
@@ -42,7 +46,8 @@
                 "uriFormat": "%s/scalar/v1"
             },
             "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "APP_SETTINGS_PROFILE": "Local"
             },
             "preLaunchTask": "build ai-pdf-rag-api"
         },

@@ -9,20 +9,20 @@ namespace AiPdfRagApp.Configuration;
 
 public static class RagServiceExtensions
 {
-    public static IServiceCollection AddRagServices(this IServiceCollection services, RagOptions? options = null)
+    public static IServiceCollection AddRagServices(this IServiceCollection services, RagOptions? ragOptions = null)
     {
-        options ??= new RagOptions();
+        ragOptions ??= new RagOptions();
 
-        services.AddSingleton(options);
+        services.AddSingleton(ragOptions);
         services.AddSingleton<IPdfTextExtractor, PdfTextExtractor>();
         services.AddSingleton<PdfIngestionService>();
         services.AddSingleton<IRegulationQueryService, RegulationQueryService>();
-        services.AddSingleton(_ => new QdrantClient(options.QdrantEndpoint));
+        services.AddSingleton(_ => new QdrantClient(ragOptions.QdrantEndpoint));
         services.AddQdrantVectorStore();
 
 #pragma warning disable SKEXP0070
-        services.AddOllamaEmbeddingGenerator(options.EmbeddingModel, options.OllamaEndpoint);
-        services.AddOllamaChatCompletion(options.ChatModel, options.OllamaEndpoint);
+        services.AddOllamaEmbeddingGenerator(ragOptions.EmbeddingModel, ragOptions.OllamaEndpoint);
+        services.AddOllamaChatCompletion(ragOptions.ChatModel, ragOptions.OllamaEndpoint);
 #pragma warning restore SKEXP0070
 
         return services;
