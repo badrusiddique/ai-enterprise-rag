@@ -21,6 +21,7 @@ The Qdrant collection is created on the first run. Later runs reuse it, so the P
 ```text
 ai-pdf-rag-app
   Configuration
+    LangfuseOptions.cs
     RagOptions.cs
     RagServiceExtensions.cs
   Interfaces
@@ -46,6 +47,8 @@ ai-pdf-rag-app
 `Services/PdfIngestionService.cs` owns the path from PDF pages to chunks, embeddings, and Qdrant records. `Services/RegulationQueryService.cs` owns retrieval, prompt construction, and conversation history. These are the two substantial operations in the application.
 
 `Configuration/RagOptions.cs` keeps the values used by more than one file in one visible place. `Models/OhsRegulation.cs` declares the record stored in Qdrant. It has one key, two payload fields, and the vector definition expected by the embedding model.
+
+`Configuration/LangfuseOptions.cs` describes optional local telemetry settings. Langfuse tracing and metrics are enabled only when all required Langfuse values are present in local configuration.
 
 `Utilities/PdfTextExtractor.cs` contains the small PdfPig boundary. Its name describes the one operation it performs, and keeping extraction separate makes `Program.cs` easier to scan without introducing another application layer.
 
@@ -93,7 +96,25 @@ To debug this project in VS Code, choose `C#: PDF RAG app` from the Run and Debu
 
 ## Configuration
 
-The local endpoints, model names, collection name, chunk sizes, and result count are in `Configuration/RagOptions.cs`. The options object is registered once and injected into the two services.
+The default endpoints, model names, collection name, chunk sizes, and result count are in `Configuration/RagOptions.cs`. The options object is registered once and injected into the services.
+
+For local overrides, create `appsettings.Local.json` in this project. The file is ignored by git and copied to the build output when present. Missing values fall back to the defaults in `RagOptions`.
+
+```json
+{
+  "Rag": {
+    "CollectionName": "00-ohs-regulations"
+  },
+  "Langfuse": {
+    "PublicKey": "SET_LOCALLY",
+    "SecretKey": "SET_LOCALLY",
+    "TraceEndpoint": "https://cloud.langfuse.com/api/public/otel/v1/traces",
+    "MetricsEndpoint": "https://cloud.langfuse.com/api/public/otel/v1/metrics"
+  }
+}
+```
+
+Keep real Langfuse keys only in `appsettings.Local.json`. If the Langfuse section is absent or incomplete, the app runs without telemetry export.
 
 ## Collection changes
 

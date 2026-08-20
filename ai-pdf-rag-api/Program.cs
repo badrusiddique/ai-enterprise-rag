@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using AiPdfRagApp.Configuration;
 using Scalar.AspNetCore;
 
@@ -10,15 +11,18 @@ var settingsProfile = Environment.GetEnvironmentVariable("APP_SETTINGS_PROFILE")
 
 var ragOptions = new RagOptions();
 builder.Configuration.GetSection("Rag").Bind(ragOptions);
+var langfuseOptions = new LangfuseOptions();
+builder.Configuration.GetSection("Langfuse").Bind(langfuseOptions);
 
 // Add services to the container.
+builder.Services.AddKernel();
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddHealthChecks();
 builder.Services.AddHttpClient();
 
 // Add RAG services from shared library
-builder.Services.AddRagServices(ragOptions);
+builder.Services.AddRagServices(ragOptions, langfuseOptions);
 
 var app = builder.Build();
 
@@ -37,6 +41,18 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapHealthChecks("/health");
+
+app.Use(async (context, next) =>
+{
+    var sessionId = context.Request.Headers["X-Session-ID"].FirstOrDefault() ?? Guid.NewGuid().ToString();
+
+    Activity.Current?.SetTag("session.id", sessionId);
+    Activity.Current?.SetTag("user.id", context.User?.Identity?.Name ?? "anonymous");
+
+    context.Items["SessionId"] = sessionId;
+
+    await next.Invoke();
+});
 
 app.MapControllers();
 

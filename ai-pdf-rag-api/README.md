@@ -63,6 +63,8 @@ ai-pdf-rag-api
 
 Controllers use explicit OpenAPI tags like `Controllers/Health` so Scalar groups endpoints by controller-oriented labels instead of relying on generated controller names.
 
+The API adds `session.id` and `user.id` tags to the current activity. Pass `X-Session-ID` when you want related requests grouped under the same session; otherwise the API creates a new session id for the request.
+
 ## Prerequisites
 
 Use the same local services and models as `ai-pdf-rag-app`:
@@ -94,6 +96,28 @@ Scalar API documentation is available in Development at:
 ```
 
 To debug in VS Code, choose `C#: PDF RAG API` from the Run and Debug menu. The profile builds the API first and opens Scalar when the server starts.
+
+## Configuration
+
+Base logging lives in `appsettings.json`. The project no longer needs a separate `appsettings.Development.json` because the development profile does not override those values.
+
+For local overrides and secrets, create `appsettings.Local.json` in this project. The file is ignored by git and copied to the build output when present. The API loads it after the normal ASP.NET Core configuration files and binds the `Rag` and `Langfuse` sections before registering shared RAG services.
+
+```json
+{
+  "Rag": {},
+  "Langfuse": {
+    "PublicKey": "SET_LOCALLY",
+    "SecretKey": "SET_LOCALLY",
+    "TraceEndpoint": "https://cloud.langfuse.com/api/public/otel/v1/traces",
+    "MetricsEndpoint": "https://cloud.langfuse.com/api/public/otel/v1/metrics"
+  }
+}
+```
+
+Keep real Langfuse keys only in `appsettings.Local.json`. If the Langfuse section is absent or incomplete, telemetry export is not enabled.
+
+When running through the checked-in debug profiles, startup logs show the ASP.NET Core environment, the settings profile, and whether local settings were loaded.
 
 ## Verify
 

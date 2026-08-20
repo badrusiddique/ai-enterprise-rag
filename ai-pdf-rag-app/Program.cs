@@ -13,15 +13,21 @@ var environmentName = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT")
 var settingsProfile = Environment.GetEnvironmentVariable("APP_SETTINGS_PROFILE")
     ?? (localSettingsLoaded ? "Local" : environmentName);
 
-var ragOptions = new RagOptions();
+
 var configuration = new ConfigurationBuilder()
     .SetBasePath(AppContext.BaseDirectory)
     .AddJsonFile("appsettings.Local.json", optional: true)
     .Build();
+
+var ragOptions = new RagOptions();
 configuration.GetSection("Rag").Bind(ragOptions);
 
+
+var langfuseOptions = new LangfuseOptions();
+configuration.GetSection("Langfuse").Bind(langfuseOptions);
+
 var builder = Kernel.CreateBuilder();
-builder.Services.AddRagServices(ragOptions);
+builder.Services.AddRagServices(ragOptions, langfuseOptions);
 
 var kernel = builder.Build();
 var ingestionService = kernel.Services.GetRequiredService<PdfIngestionService>();

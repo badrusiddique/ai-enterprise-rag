@@ -28,6 +28,8 @@ An ASP.NET Core API for the PDF regulation RAG pipeline. It references `ai-pdf-r
 
 The .NET applications use the same local Ollama and Qdrant services. Each application uses a separate collection name so their records do not conflict.
 
+Project defaults live in code. Local overrides and secrets belong in `appsettings.Local.json` beside the project that needs them. Those files are ignored by git and copied to the build output when present.
+
 Start Qdrant:
 
 ```bash
@@ -47,6 +49,8 @@ Each project README lists its exact setup, run command, design choices, and curr
 ## Debug locally
 
 The repository includes shared VS Code launch profiles in `.vscode/launch.json`. Choose a `C#` profile to build and debug one of the .NET applications, or choose a `Python` profile to run one text splitting script with breakpoints. Select the Python interpreter from `ai-text-splitting-py/.venv` after installing its requirements.
+
+The PDF app and API debug profiles keep the .NET environment in `Development` and set `APP_SETTINGS_PROFILE=Local`. Startup output reports the environment, active settings profile, and whether `appsettings.Local.json` was loaded.
 
 ## Learning guides
 
