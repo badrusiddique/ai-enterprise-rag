@@ -16,6 +16,10 @@ A Semantic Kernel version of the movie example. It adds plugins, function callin
 
 Python examples for length based, recursive, language aware, and semantic text splitting. These scripts make chunk boundaries visible before the same ideas are used in a RAG pipeline.
 
+### [AI Guardrails Python](./ai-guardrails-py)
+
+Jupyter notebook examples for Guardrails AI input validation. They demonstrate competitor-name checks, jailbreak detection, and selected PII detection with different failure policies.
+
 ### [AI PDF RAG app](./ai-pdf-rag-app)
 
 A local question answering application for selected parts of the British Columbia Occupational Health and Safety Regulation. It extracts text with PdfPig, creates overlapping chunks, embeds them with Ollama, stores them in Qdrant, and returns answers with page references.
@@ -51,6 +55,8 @@ Each project README lists its exact setup, run command, design choices, and curr
 The repository includes shared VS Code launch profiles in `.vscode/launch.json`. Choose a `C#` profile to build and debug one of the .NET applications, or choose a `Python` profile to run one text splitting script with breakpoints. Select the Python interpreter from `ai-text-splitting-py/.venv` after installing its requirements.
 
 The PDF app and API debug profiles keep the .NET environment in `Development` and set `APP_SETTINGS_PROFILE=Local`. Startup output reports the environment, active settings profile, and whether `appsettings.Local.json` was loaded.
+
+The Guardrails project is notebook-based. Follow its README to create the project virtual environment and select the `AI Guardrails Python` kernel before running a notebook.
 
 ## Learning guides
 
