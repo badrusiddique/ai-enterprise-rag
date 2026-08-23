@@ -52,6 +52,25 @@
             "preLaunchTask": "build ai-pdf-rag-api"
         },
         {
+            "name": "C#: RAG Azure API",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder}/ai-rag-azure-api/bin/Debug/net10.0/ai-rag-azure-api",
+            "args": [],
+            "cwd": "${workspaceFolder}/ai-rag-azure-api",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
+                "uriFormat": "%s/scalar"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "https://localhost:7230;http://localhost:5015"
+            },
+            "preLaunchTask": "build ai-rag-azure-api"
+        },
+        {
             "name": "Python: length based splitter",
             "type": "debugpy",
             "request": "launch",

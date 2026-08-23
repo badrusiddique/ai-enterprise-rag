@@ -48,6 +48,18 @@
                 "Debug"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build ai-rag-azure-api",
+            "type": "shell",
+            "command": "dotnet",
+            "args": [
+                "build",
+                "${workspaceFolder}/ai-rag-azure-api/ai-rag-azure-api.csproj",
+                "--configuration",
+                "Debug"
+            ],
+            "problemMatcher": "$msCompile"
         }
     ]
 }

@@ -29,6 +29,7 @@ packages/
 
 # Local settings and secrets
 appsettings.Local.json
+ai-rag-azure-api/appsettings.Local.json
 
 # OS
 .DS_Store
