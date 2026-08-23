@@ -28,6 +28,10 @@ A local question answering application for selected parts of the British Columbi
 
 An ASP.NET Core API for the PDF regulation RAG pipeline. It references `ai-pdf-rag-app`, uses the same `AddRagServices()` dependency registration, exposes the query flow through `POST /api/regulation/query`, and checks local Qdrant/Ollama availability through `GET /api/health`.
 
+### [AI RAG Azure API](./ai-rag-azure-api)
+
+An ASP.NET Core API for Azure OpenAI summarization. It includes both a Semantic Kernel function-invocation endpoint and a direct chat completion endpoint so you can compare connector behavior and filter execution paths.
+
 ## Shared infrastructure
 
 The .NET applications use the same local Ollama and Qdrant services. Each application uses a separate collection name so their records do not conflict.
@@ -75,6 +79,7 @@ dotnet build ai-rag-movie-app/ai-rag-movie-app.csproj --configuration Release
 dotnet build ai-semantic-rag-movie-app/ai-semantic-rag-movie-app.csproj --configuration Release
 dotnet build ai-pdf-rag-app/ai-pdf-rag-app.csproj --configuration Release
 dotnet build ai-pdf-rag-api/ai-pdf-rag-api.csproj --configuration Release
+dotnet build ai-rag-azure-api/ai-rag-azure-api.csproj --configuration Release
 dotnet test ai-pdf-rag-api.Tests/ai-pdf-rag-api.Tests.csproj --configuration Release
 
 dotnet format ai-rag-movie-app/ai-rag-movie-app.csproj --verify-no-changes
@@ -82,6 +87,7 @@ dotnet format ai-semantic-rag-movie-app/ai-semantic-rag-movie-app.csproj --verif
 dotnet format ai-pdf-rag-app/ai-pdf-rag-app.csproj --verify-no-changes
 dotnet format ai-pdf-rag-api/ai-pdf-rag-api.csproj --verify-no-changes
 dotnet format ai-pdf-rag-api.Tests/ai-pdf-rag-api.Tests.csproj --verify-no-changes
+dotnet format ai-rag-azure-api/ai-rag-azure-api.csproj --verify-no-changes
 
 python3 -m compileall -q ai-text-splitting-py
 ```
