@@ -2,7 +2,12 @@ using Microsoft.SemanticKernel;
 
 public class ContentSafetyFilter : IFunctionInvocationFilter
 {
-    private static readonly string[] UnsafeKeywords = ["violence", "hate", "illegal"];
+    private readonly IContentSafetyService _contentSafetyService;
+
+    public ContentSafetyFilter(IContentSafetyService contentSafetyService)
+    {
+        _contentSafetyService = contentSafetyService;
+    }
 
     public async Task OnFunctionInvocationAsync(FunctionInvocationContext context, Func<FunctionInvocationContext, Task> next)
     {
@@ -17,14 +22,25 @@ public class ContentSafetyFilter : IFunctionInvocationFilter
                     context.Result = new FunctionResult(function, "Content is not safe, I cannot process this request.");
                     return;
                 }
+
+                if (!await IsPromptSafeAsync(content))
+                {
+                    context.Result = new FunctionResult(function, "Prompt Injection detected, I cannot process this request.");
+                    return;
+                }
             }
         }
+
         await next(context);
     }
 
     private Task<bool> IsContentSafeAsync(string content)
     {
-        // Placeholder behavior keeps requests flowing until a real safety check is wired in.
-        return Task.FromResult(!UnsafeKeywords.Any(keyword => content.Contains(keyword, StringComparison.OrdinalIgnoreCase)));
+        return _contentSafetyService.IsContentSafeAsync(content);
+    }
+
+    private Task<bool> IsPromptSafeAsync(string userPrompt)
+    {
+        return _contentSafetyService.IsPromptSafeAsync(userPrompt);
     }
 }

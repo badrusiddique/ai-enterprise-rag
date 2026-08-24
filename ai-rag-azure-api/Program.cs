@@ -14,7 +14,8 @@ builder.Services.AddTelemetryConfiguration(builder.Configuration);
 builder.Services.AddAzureOpenAIConfiguration(builder.Configuration);
 
 builder.Services.AddHealthChecks();
-builder.Services.AddSingleton<AzureContentSafetyService>();
+builder.Services.AddHttpClient();
+builder.Services.AddSingleton<IContentSafetyService, AzureContentSafetyService>();
 
 var app = builder.Build();
 

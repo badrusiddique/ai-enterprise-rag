@@ -24,7 +24,8 @@ The two endpoints are useful for learning how Semantic Kernel filters behave:
 Current filter setup:
 
 1. `StructuredLoggingFilter` logs function-level invocation details.
-2. `SemanticCacheFilter` caches Kernel summarize responses for 10 minutes using function name and arguments as the cache key.
+2. `ContentSafetyFilter` checks prompt and content safety before function execution using `IContentSafetyService`.
+3. `SemanticCacheFilter` caches Kernel summarize responses for 10 minutes using normalized arguments as the cache key.
 
 ## Example requests
 
@@ -61,8 +62,11 @@ ai-rag-azure-api
   Controllers
     SummarizeController.cs
   Middlewares
+    ContentSafetyFilter.cs
     SemanticCacheFilter.cs
     StructuredLoggingFilter.cs
+  Services
+    AzureContentSafetyService.cs
   Properties
     launchSettings.json
   Program.cs
@@ -87,6 +91,10 @@ Expected configuration shape:
     "ApiKey": "SET_LOCALLY",
     "Deployment": "gpt-4.1-mini"
   },
+  "AzureContentSafety": {
+    "Endpoint": "https://<your-resource>.cognitiveservices.azure.com",
+    "ApiKey": "SET_LOCALLY"
+  },
   "Langfuse": {
     "PublicKey": "SET_LOCALLY",
     "SecretKey": "SET_LOCALLY",
@@ -97,6 +105,8 @@ Expected configuration shape:
 ```
 
 If Azure OpenAI settings are missing, chat services are not configured and summarize endpoints will fail at runtime.
+
+If Azure Content Safety settings are missing, content safety checks are not configured and requests that run through `ContentSafetyFilter` will fail.
 
 If Langfuse settings are missing, telemetry export is skipped.
 

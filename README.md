@@ -30,7 +30,7 @@ An ASP.NET Core API for the PDF regulation RAG pipeline. It references `ai-pdf-r
 
 ### [AI RAG Azure API](./ai-rag-azure-api)
 
-An ASP.NET Core API for Azure OpenAI summarization. It includes both a Semantic Kernel function-invocation endpoint and a direct chat completion endpoint so you can compare connector behavior and filter execution paths.
+An ASP.NET Core API for Azure OpenAI summarization. It includes both a Semantic Kernel function-invocation endpoint and a direct chat completion endpoint so you can compare connector behavior and filter execution paths, plus content-safety and cache filters in the Kernel path.
 
 ## Shared infrastructure
 
