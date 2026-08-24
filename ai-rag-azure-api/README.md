@@ -21,6 +21,11 @@ The two endpoints are useful for learning how Semantic Kernel filters behave:
 1. `POST /api/summarize` runs through Kernel function invocation. `IFunctionInvocationFilter` implementations execute here.
 2. `POST /api/summarize/with-chat` calls the connector directly. `IFunctionInvocationFilter` implementations do not execute here.
 
+Current filter setup:
+
+1. `StructuredLoggingFilter` logs function-level invocation details.
+2. `SemanticCacheFilter` caches Kernel summarize responses for 10 minutes using function name and arguments as the cache key.
+
 ## Example requests
 
 ### Kernel path
@@ -56,6 +61,7 @@ ai-rag-azure-api
   Controllers
     SummarizeController.cs
   Middlewares
+    SemanticCacheFilter.cs
     StructuredLoggingFilter.cs
   Properties
     launchSettings.json
