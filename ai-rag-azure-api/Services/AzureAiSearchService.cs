@@ -2,6 +2,19 @@
 using Azure;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
+using Microsoft.Extensions.Options;
+
+public sealed class AzureSearchOptions
+{
+    public string Endpoint { get; set; } = string.Empty;
+    public string ApiKey { get; set; } = string.Empty;
+    public string IndexName { get; set; } = string.Empty;
+
+    public bool IsConfigured =>
+        !string.IsNullOrWhiteSpace(Endpoint)
+        && !string.IsNullOrWhiteSpace(ApiKey)
+        && !string.IsNullOrWhiteSpace(IndexName);
+}
 
 public interface IAzureAiSearchService
 {
@@ -12,18 +25,16 @@ public class AzureAiSearchService : IAzureAiSearchService
 {
     private readonly SearchClient _azureSearchClient;
 
-    public AzureAiSearchService(IConfiguration configuration)
+    public AzureAiSearchService(IOptions<AzureSearchOptions> options)
     {
-        var endpoint = configuration["AzureSearch:Endpoint"];
-        var indexName = configuration["AzureSearch:IndexName"];
-        var apiKey = configuration["AzureSearch:ApiKey"];
+        var settings = options.Value;
 
-        if (string.IsNullOrWhiteSpace(endpoint) || string.IsNullOrWhiteSpace(indexName) || string.IsNullOrWhiteSpace(apiKey))
+        if (!settings.IsConfigured)
         {
-            throw new InvalidOperationException("AzureSearch configuration is missing Endpoint, IndexName, or ApiKey.");
+            throw new InvalidOperationException("Azure Search configuration is missing Endpoint, IndexName, or ApiKey.");
         }
 
-        _azureSearchClient = new SearchClient(new Uri(endpoint), indexName, new AzureKeyCredential(apiKey));
+        _azureSearchClient = new SearchClient(new Uri(settings.Endpoint), settings.IndexName, new AzureKeyCredential(settings.ApiKey));
     }
 
 

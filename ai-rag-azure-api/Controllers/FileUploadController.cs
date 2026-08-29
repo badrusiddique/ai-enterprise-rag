@@ -1,16 +1,27 @@
 using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+
+public sealed class AzureBlobStorageOptions
+{
+    public string ConnectionString { get; set; } = string.Empty;
+    public string ContainerName { get; set; } = string.Empty;
+
+    public bool IsConfigured =>
+        !string.IsNullOrWhiteSpace(ConnectionString)
+        && !string.IsNullOrWhiteSpace(ContainerName);
+}
 
 [ApiController]
 [Route("api/[controller]")]
 [Tags("Controllers/FileUpload")]
 public class FileUploadController : ControllerBase
 {
-    private readonly IConfiguration _configuration;
+    private readonly AzureBlobStorageOptions _options;
 
-    public FileUploadController(IConfiguration configuration)
+    public FileUploadController(IOptions<AzureBlobStorageOptions> options)
     {
-        _configuration = configuration;
+        _options = options.Value;
     }
 
     [HttpPost]
@@ -21,7 +32,12 @@ public class FileUploadController : ControllerBase
             return BadRequest("File is required.");
         }
 
-        var containerClient = new BlobContainerClient(_configuration["AzureBlobStorage:ConnectionString"], _configuration["AzureBlobStorage:ContainerName"]);
+        if (!_options.IsConfigured)
+        {
+            return StatusCode(500, "Blob Storage configuration is missing.");
+        }
+
+        var containerClient = new BlobContainerClient(_options.ConnectionString, _options.ContainerName);
         await containerClient.CreateIfNotExistsAsync();
 
         var blobClient = containerClient.GetBlobClient(file.FileName);

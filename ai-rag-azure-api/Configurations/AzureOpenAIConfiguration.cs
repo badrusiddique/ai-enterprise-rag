@@ -17,7 +17,7 @@ public static class AzureOpenAIConfiguration
 {
     public static IServiceCollection AddAzureOpenAIConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
-        var azureOpenAIOptions = configuration.GetSection("AzureOpenAI").Get<AzureOpenAIOptions>() ?? new AzureOpenAIOptions();
+        var azureOpenAIOptions = configuration.GetSection("Azure:OpenAI").Get<AzureOpenAIOptions>() ?? new AzureOpenAIOptions();
 
         if (!azureOpenAIOptions.IsConfigured)
         {

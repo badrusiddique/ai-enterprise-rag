@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Azure;
 using Azure.AI.ContentSafety;
+using Microsoft.Extensions.Options;
 
 public interface IContentSafetyService
 {
@@ -8,24 +9,34 @@ public interface IContentSafetyService
     Task<bool> IsPromptSafeAsync(string userPrompt);
 }
 
+public sealed class AzureContentSafetyOptions
+{
+    public string Endpoint { get; set; } = string.Empty;
+    public string ApiKey { get; set; } = string.Empty;
+
+    public bool IsConfigured =>
+        !string.IsNullOrWhiteSpace(Endpoint)
+        && !string.IsNullOrWhiteSpace(ApiKey);
+}
+
 public class AzureContentSafetyService : IContentSafetyService
 {
     private readonly HttpClient _httpClient;
-    private readonly IConfiguration _configuration;
+    private readonly AzureContentSafetyOptions _options;
     private readonly ContentSafetyClient _contentSafetyClient;
 
-    public AzureContentSafetyService(IConfiguration configuration, HttpClient httpClient)
+    public AzureContentSafetyService(IOptions<AzureContentSafetyOptions> options, HttpClient httpClient)
     {
-        var apiKey = configuration["AzureContentSafety:ApiKey"];
-        var endpoint = configuration["AzureContentSafety:Endpoint"];
+        _options = options.Value;
+        var apiKey = _options.ApiKey;
+        var endpoint = _options.Endpoint;
 
-        if (string.IsNullOrWhiteSpace(apiKey) || string.IsNullOrWhiteSpace(endpoint))
+        if (!_options.IsConfigured)
         {
-            throw new InvalidOperationException("AzureContentSafety configuration is missing ApiKey or Endpoint.");
+            throw new InvalidOperationException("Azure ContentSafety configuration is missing Endpoint or ApiKey.");
         }
 
         _httpClient = httpClient;
-        _configuration = configuration;
         _contentSafetyClient = new ContentSafetyClient(new Uri(endpoint), new AzureKeyCredential(apiKey));
     }
 
@@ -59,10 +70,10 @@ public class AzureContentSafetyService : IContentSafetyService
     /// <returns></returns>
     public async Task<bool> IsPromptSafeAsync(string userPrompt)
     {
-        var sheildPromptUrl = $"{_configuration["AzureContentSafety:Endpoint"]}/contentsafety/text:shieldPrompt?api-version=2024-09-01";
+        var sheildPromptUrl = $"{_options.Endpoint}/contentsafety/text:shieldPrompt?api-version=2024-09-01";
 
         var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, sheildPromptUrl);
-        httpRequestMessage.Headers.Add("Ocp-Apim-Subscription-Key", _configuration["AzureContentSafety:ApiKey"]);
+        httpRequestMessage.Headers.Add("Ocp-Apim-Subscription-Key", _options.ApiKey);
         httpRequestMessage.Content = new StringContent(JsonSerializer.Serialize(new { userPrompt }), System.Text.Encoding.UTF8, "application/json");
 
         var response = await _httpClient.SendAsync(httpRequestMessage);

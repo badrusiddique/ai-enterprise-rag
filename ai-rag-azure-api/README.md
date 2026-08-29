@@ -111,23 +111,25 @@ Expected configuration shape:
 
 ```json
 {
-  "AzureOpenAI": {
-    "Endpoint": "https://<your-resource>.openai.azure.com",
-    "ApiKey": "SET_LOCALLY",
-    "Deployment": "gpt-4.1-mini"
-  },
-  "AzureSearch": {
-    "Endpoint": "https://<your-resource>.search.windows.net",
-    "IndexName": "regulation-index",
-    "ApiKey": "SET_LOCALLY"
-  },
-  "AzureContentSafety": {
-    "Endpoint": "https://<your-resource>.cognitiveservices.azure.com",
-    "ApiKey": "SET_LOCALLY"
-  },
-  "AzureBlobStorage": {
-    "ConnectionString": "SET_LOCALLY",
-    "ContainerName": "documents"
+  "Azure": {
+    "OpenAI": {
+      "Endpoint": "https://<your-resource>.openai.azure.com",
+      "ApiKey": "SET_LOCALLY",
+      "Deployment": "gpt-4-mini"
+    },
+    "Search": {
+      "Endpoint": "https://<your-resource>.search.windows.net",
+      "IndexName": "regulation-index",
+      "ApiKey": "SET_LOCALLY"
+    },
+    "ContentSafety": {
+      "Endpoint": "https://<your-resource>.cognitiveservices.azure.com",
+      "ApiKey": "SET_LOCALLY"
+    },
+    "BlobStorage": {
+      "ConnectionString": "SET_LOCALLY",
+      "ContainerName": "documents"
+    }
   },
   "Langfuse": {
     "PublicKey": "SET_LOCALLY",

@@ -9,6 +9,12 @@ builder.Configuration.AddJsonFile("appsettings.Local.json", optional: true, relo
 builder.Services.AddOpenApi();
 builder.Services.AddMemoryCache();
 builder.Services.AddControllers();
+
+// Azure configuration sections
+builder.Services.Configure<AzureContentSafetyOptions>(builder.Configuration.GetSection("Azure:ContentSafety"));
+builder.Services.Configure<AzureSearchOptions>(builder.Configuration.GetSection("Azure:Search"));
+builder.Services.Configure<AzureBlobStorageOptions>(builder.Configuration.GetSection("Azure:BlobStorage"));
+
 builder.Services.AddSemanticFilterConfiguration();
 builder.Services.AddTelemetryConfiguration(builder.Configuration);
 builder.Services.AddAzureOpenAIConfiguration(builder.Configuration);
