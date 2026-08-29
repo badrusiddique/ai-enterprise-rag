@@ -15,6 +15,8 @@ builder.Services.AddAzureOpenAIConfiguration(builder.Configuration);
 
 builder.Services.AddHealthChecks();
 builder.Services.AddHttpClient();
+builder.Services.AddSingleton<IAzureOpenAiService, AzureOpenAiService>();
+builder.Services.AddSingleton<IAzureAiSearchService, AzureAiSearchService>();
 builder.Services.AddSingleton<IContentSafetyService, AzureContentSafetyService>();
 
 var app = builder.Build();

@@ -1,18 +1,19 @@
 # AI RAG Azure API
 
-This ASP.NET Core API exposes Azure OpenAI summarization over HTTP and demonstrates two integration styles:
+This ASP.NET Core API demonstrates retrieval-augmented generation (RAG) and content safety with Azure services:
 
-1. Summarization through Semantic Kernel function invocation.
-2. Summarization through direct `IChatCompletionService` connector calls.
-
-The project is intentionally small and focused so the differences between these two paths are easy to observe and debug.
+1. Azure OpenAI for chat and summarization.
+2. Azure AI Search for vector-based document retrieval.
+3. Azure Content Safety for prompt injection and content moderation.
+4. Semantic Kernel filters for pre/post-invocation hooks.
 
 ## What the API does
 
-1. Accepts text input at `POST /api/summarize` and summarizes through `Kernel.InvokePromptAsync`.
-2. Accepts text input at `POST /api/summarize/with-chat` and summarizes through `IChatCompletionService.GetChatMessageContentAsync`.
-3. Exposes health checks at `GET /health`.
-4. Exposes OpenAPI and Scalar in Development.
+1. `POST /api/summarize` — Summarizes text through Kernel function invocation (Semantic Kernel filters execute).
+2. `POST /api/summarize/with-chat` — Summarizes text through direct chat service (filters do not execute).
+3. `POST /api/chat` — Answers questions about a document corpus using vector search and RAG.
+4. `POST /api/fileupload` — Uploads documents to Azure Blob Storage for ingestion into the knowledge base.
+5. `GET /health` — Exposes health checks.
 
 ## Why there are two summarize endpoints
 
@@ -29,7 +30,7 @@ Current filter setup:
 
 ## Example requests
 
-### Kernel path
+### Summarize via Kernel (filters run)
 
 ```http
 POST http://localhost:5015/api/summarize
@@ -40,7 +41,7 @@ Content-Type: application/json
 }
 ```
 
-### Direct chat connector path
+### Summarize via Chat (filters do not run)
 
 ```http
 POST http://localhost:5015/api/summarize/with-chat
@@ -49,6 +50,26 @@ Content-Type: application/json
 {
   "text": "Summarize this paragraph in two bullet points..."
 }
+```
+
+### Ask a RAG question
+
+```http
+POST http://localhost:5015/api/chat
+Content-Type: application/json
+
+{
+  "message": "What does the regulation say about fall protection?"
+}
+```
+
+### Upload a document
+
+```http
+POST http://localhost:5015/api/fileupload
+Content-Type: multipart/form-data
+
+[File: regulation.pdf]
 ```
 
 ## Project structure
@@ -60,13 +81,17 @@ ai-rag-azure-api
     SemanticFilterConfiguration.cs
     TelemetryConfiguration.cs
   Controllers
+    ChatController.cs
+    FileUploadController.cs
     SummarizeController.cs
   Middlewares
     ContentSafetyFilter.cs
     SemanticCacheFilter.cs
     StructuredLoggingFilter.cs
   Services
+    AzureAiSearchService.cs
     AzureContentSafetyService.cs
+    AzureOpenAiService.cs
   Properties
     launchSettings.json
   Program.cs
@@ -91,9 +116,18 @@ Expected configuration shape:
     "ApiKey": "SET_LOCALLY",
     "Deployment": "gpt-4.1-mini"
   },
+  "AzureSearch": {
+    "Endpoint": "https://<your-resource>.search.windows.net",
+    "IndexName": "regulation-index",
+    "ApiKey": "SET_LOCALLY"
+  },
   "AzureContentSafety": {
     "Endpoint": "https://<your-resource>.cognitiveservices.azure.com",
     "ApiKey": "SET_LOCALLY"
+  },
+  "AzureBlobStorage": {
+    "ConnectionString": "SET_LOCALLY",
+    "ContainerName": "documents"
   },
   "Langfuse": {
     "PublicKey": "SET_LOCALLY",
@@ -104,11 +138,9 @@ Expected configuration shape:
 }
 ```
 
-If Azure OpenAI settings are missing, chat services are not configured and summarize endpoints will fail at runtime.
+If Azure Search settings are missing, chat endpoints will fail at runtime.
 
-If Azure Content Safety settings are missing, content safety checks are not configured and requests that run through `ContentSafetyFilter` will fail.
-
-If Langfuse settings are missing, telemetry export is skipped.
+If Azure Blob Storage settings are missing, file upload will fail at runtime.
 
 ## Run
 
